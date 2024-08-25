@@ -1,0 +1,59 @@
+version: '3.8'
+
+
+x-service-base: &base_service
+  build:
+    context: .
+  restart: always
+  env_file: []
+  networks:
+    - backend
+
+
+services:
+  bsw_bet_maker:
+    <<: *base_service
+    build:
+      dockerfile: bet_maker_service/Dockerfile
+    container_name: bsw_bet_maker
+    ports:
+      - "8080:8080"
+    env_file:
+      - docker/bet_maker/.env
+    depends_on:
+      - bsw_bet_maker_postgres_db
+
+  bsw_line_provider:
+    <<: *base_service
+    build:
+      dockerfile: line_provider_service/Dockerfile
+    container_name: bsw_line_provider
+    ports:
+      - "8000:8000"
+    env_file:
+      - docker/line_provider/.env
+
+  bsw_rabbitmq:
+    image: rabbitmq:3-management
+    container_name: bsw_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+
+  bsw_bet_maker_postgres_db:
+    image: postgres:15
+    restart: always
+    env_file:
+      - ./docker/postgres/.env
+    networks:
+      - backend
+    container_name: bsw_bet_maker_postgres_db
+    ports:
+      - "5432:5432"
+
+
+networks:
+  backend:
+    driver: bridge
