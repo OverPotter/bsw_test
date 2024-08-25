@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "bsw-test"
+version = "0.1.0"
+description = ""
+authors = ["QdMiracle <qdmiracle21@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aio-pika = "^9.4.3"
+fastapi = "^0.112.1"
+sqlalchemy = "^2.0.32"
+asyncpg = "^0.29.0"
+pydantic-settings = "^2.4.0"
+uvicorn = "^0.30.6"
+alembic = "^1.13.2"
+
+
+[tool.poetry.group.lint.dependencies]
+isort = "^5.13.2"
+black = "^24.8.0"
+ruff = "^0.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
