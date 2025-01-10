@@ -30,7 +30,7 @@ events: dict[str, Event] = {
     "2": Event(
         event_id=uuid4(),
         coefficient=Decimal("1.15"),
-        deadline=int(time.time()) + 1,
+        deadline=int(time.time()) + 60,
         state=EventState.NEW,
     ),
     "3": Event(
