@@ -138,5 +138,10 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-/.idea/
+.idea/
 /.env
+
+/bet_maker_service/poetry.lock
+/bet_maker_service/pyproject.toml
+/line_provider_service/poetry.lock
+/line_provider_service/pyproject.toml

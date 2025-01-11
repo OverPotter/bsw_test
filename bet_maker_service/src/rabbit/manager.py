@@ -1,6 +1,5 @@
 import asyncio
 import json
-import logging
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
@@ -11,8 +10,10 @@ from aio_pika import Channel, Message
 from aio_pika.abc import AbstractRobustChannel
 from pydantic import BaseModel
 from src.config import settings_factory
+from src.services.logging_service.logging_service import logger_factory
 
 setting = settings_factory()
+logger = logger_factory()
 
 
 class BaseRMQ:
@@ -35,7 +36,7 @@ class BaseRMQ:
         try:
             return json.dumps(data, default=default).encode()
         except TypeError as e:
-            logging.error(f"Ошибка сериализации: {e}")
+            logger.error(f"Serialization error: {e}.")
             raise
 
     @staticmethod
@@ -53,7 +54,7 @@ class MessageQueue(BaseRMQ):
             correlation_id=str(uuid4()),
         )
         await self.channel.default_exchange.publish(message, routing_key=queue_name)
-        logging.info(f"Message sent to {queue_name}")
+        logger.info(f"Message sent to {queue_name}.")
 
     async def consume_queue(
         self, func, queue_name: str, auto_delete_queue: bool = False
@@ -63,14 +64,13 @@ class MessageQueue(BaseRMQ):
         )
 
         async with queue.iterator() as queue_iter:
-            logging.info("Started consuming messages...")
             async for message in queue_iter:
-                logging.debug(f"Received message body: {message.body}")
+                logger.debug(f"Received message body: {message.body}.")
                 await func(message)
 
     async def close(self):
         if self.channel:
-            logging.info("Closing MQ channel")
+            logger.info("Closing MQ channel.")
             await self.channel.close()
             self.channel = None
 
@@ -83,22 +83,22 @@ async def connect_to_broker() -> AbstractRobustChannel:
     conn_str = f"amqp://{setting.RMQ_LOGIN}:{setting.RMQ_PASSWORD}@{setting.RMQ_HOST}:{setting.RMQ_PORT}/"
 
     while not broker_connection:
-        logging.info(f"Trying to connect to broker: {conn_str}")
+        logger.info(f"Trying to connect to broker: {conn_str}.")
         try:
             broker_connection = await aio_pika.connect_robust(conn_str)
-            logging.info(
-                f"Connected to broker ({type(broker_connection)} ID {id(broker_connection)})"
+            logger.info(
+                f"Connected to broker ({type(broker_connection)} ID {id(broker_connection)})."
             )
         except Exception as e:
             retries += 1
-            logging.error(f"Can't connect to broker. Retry #{retries}. Error: {e}")
+            logger.error(f"Can't connect to broker. Retry #{retries}. Error: {e}.")
             await asyncio.sleep(5)
 
     if not broker_channel:
-        logging.info("Trying to create channel to broker")
+        logger.info("Trying to create channel to broker.")
         broker_channel = await broker_connection.channel()
-        logging.info(
-            f"Channel to broker established ({type(broker_channel)} ID {id(broker_channel)})"
+        logger.info(
+            f"Channel to broker established ({type(broker_channel)} ID {id(broker_channel)})."
         )
 
     return broker_channel

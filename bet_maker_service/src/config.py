@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     RMQ_HOST: str
     RMQ_PORT: int
 
+    DEBUG: bool = False
+
     def get_engine_link(self) -> str:
         return f"postgresql+asyncpg://{self.PG_USER}:{self.PG_PASS}@{self.PG_HOST}:{self.PG_PORT}/{self.PG_DB_NAME}"
 
