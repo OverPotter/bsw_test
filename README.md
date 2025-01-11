@@ -69,10 +69,40 @@
    git clone <repository_url>
    cd <repository_directory>```
 2. Убедитесь, что установлен Docker и Docker Compose.
-3. Запустите сервисы:
+3. Перейдите в корневую директорию проекта, где находится папка docker:
+```bash
+cd docker/
+```
+4. Создание файлов ```.env``` на основе ```.env.local```:
+Для каждого подкаталога в папке docker вам нужно будет создать файл ```.env``` на основе существующего ```.env.local```.
+
+Выполните следующие шаги для каждого подкаталога:
+     1. Перейдите в подкаталог (например, ```bet_maker```):
+```bash
+cd bet_maker
+```
+     2. Создайте файл ```.env```, скопировав содержимое из ```.env.local``` (подойдет для локального запуска):
+```bash
+cp .env.local .env
+```
+     3. Повторите эти шаги для всех остальных подкаталогов (```line_provider```, ```postgres```, ```rabbitmq```):
+```bash
+cd ../line_provider
+cp .env.local .env
+
+cd ../postgres
+cp .env.local .env
+
+cd ../rabbitmq
+cp .env.local .env
+```
+
+
+5. Запустите сервисы:
 ```bash
 make up
 ```
-4. Откройте документацию API:
+6. Откройте документацию API:
 - ```line-provider```: http://localhost:8000/docs
-  - ```bet-maker```: http://localhost:8080/docs
+- ```bet-maker```: http://localhost:8080/docs
+7. Протестируйте API.
