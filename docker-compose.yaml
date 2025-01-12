@@ -39,6 +39,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    env_file:
+      - docker/rabbitmq/.env
     networks:
       - backend
 

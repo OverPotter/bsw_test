@@ -5,7 +5,7 @@ from src.schemas.response.base import BaseResponse
 
 
 class EventBaseResponse(BaseResponse):
-    event_id: str
+    event_id: int
     coefficient: Decimal
-    deadline: int
+    deadline: int | float
     state: Any

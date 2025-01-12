@@ -24,7 +24,7 @@ def upgrade() -> None:
 
     op.create_table(
         "bet",
-        sa.Column("event_id", sa.UUID(), nullable=False),
+        sa.Column("event_id", sa.INTEGER(), nullable=False),
         sa.Column("bet_amount", sa.Numeric(), nullable=False),
         sa.Column(
             "id",

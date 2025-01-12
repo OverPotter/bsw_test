@@ -1,7 +1,6 @@
 import time
 
-from fastapi import APIRouter, Depends
-from src.constants import EVENTS
+from fastapi import APIRouter, Depends, Request
 from src.database.repositories.manager import (
     OrmRepositoryManager,
     orm_repository_manager_factory,
@@ -18,9 +17,9 @@ repository_manager = orm_repository_manager_factory()
 
 
 @router.get("/events")
-async def get_available_events_to_bets():
-    available_events = [e for e in EVENTS.values() if time.time() < e.deadline]
-    return available_events
+async def get_available_events_to_bets(request: Request):
+    events = request.app.state.events
+    return [event for event in events.values() if time.time() < event.deadline]
 
 
 @router.post("", response_model=BetBaseResponse)
