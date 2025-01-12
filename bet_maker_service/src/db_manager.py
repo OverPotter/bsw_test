@@ -1,4 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    create_async_engine,
+)
 from src.config import settings_factory
 from src.utils.singleton import singleton
 

@@ -53,7 +53,9 @@ class MessageQueue(BaseRMQ):
             content_type="application/json",
             correlation_id=str(uuid4()),
         )
-        await self.channel.default_exchange.publish(message, routing_key=queue_name)
+        await self.channel.default_exchange.publish(
+            message, routing_key=queue_name
+        )
         logger.info(f"Message sent to {queue_name}.")
 
     async def consume_queue(
@@ -91,7 +93,9 @@ async def connect_to_broker() -> AbstractRobustChannel:
             )
         except Exception as e:
             retries += 1
-            logger.error(f"Can't connect to broker. Retry #{retries}. Error: {e}.")
+            logger.error(
+                f"Can't connect to broker. Retry #{retries}. Error: {e}."
+            )
             await asyncio.sleep(5)
 
     if not broker_channel:

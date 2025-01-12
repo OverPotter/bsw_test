@@ -31,7 +31,9 @@ async def create_event(event: Event, request: Request):
 
     await mq.send(MQ_ROUTING_KEY, event)
     action = "Created" if is_new_event else "Updated"
-    logger.info(f"{action} event with event_id {event_id} sent to {MQ_ROUTING_KEY}.")
+    logger.info(
+        f"{action} event with event_id {event_id} sent to {MQ_ROUTING_KEY}."
+    )
 
     return {}
 
